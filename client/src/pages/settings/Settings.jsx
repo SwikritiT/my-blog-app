@@ -1,7 +1,51 @@
+import { useContext,  useState } from "react"
+import axios from 'axios';
 import SideBar from "../../components/sidebar/SideBar"
+import { Context } from "../../context/Context"
 import "./settings.css"
 
 export default function Settings() {
+    const [file,setFile] = useState(null);
+    const [username,setUsername] = useState("");
+    const [email,setEmail] = useState("");
+    const [password,setPassword] = useState("");
+    const [success,setSucess] = useState(false);
+    const { user, dispatch } =  useContext(Context)
+    const PF ="http://localhost:5000/images/"
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        dispatch({type: "UPDATE_START"})
+        const updatedUser ={ 
+            userId:user._id,
+            username,
+            email,
+            password
+        };
+        if(file){
+            const data = new FormData();
+            const filename = Date.now() + file.name;
+            data.append("name", filename);
+            data.append("file",file);
+            updatedUser.profilePic = filename;
+            try{
+                await axios.post("/upload",data);
+                
+
+            }catch(err){
+
+            }
+        }
+        try{
+            const res = await axios.put("/users/"+user._id, updatedUser);
+            setSucess(true);
+            dispatch({type: "UPDATE_SUCCESS", payload: res.data})
+        } catch (err){
+            dispatch({type: "UPDATE_FAILURE"})
+        }
+       
+    }
+
     return (
         <div className="settings">
             <div className="settingsWrapper">
@@ -9,24 +53,30 @@ export default function Settings() {
                     <span className="settingsUpdateTitle">Update Your Account</span>
                     <span className="settingsDeleteTitle">Delete Account</span>
                 </div>
-                <form className="settingsForm">
+                <form className="settingsForm" onSubmit= {handleSubmit}>
                     <div className="settingsProfilePicture">
                     <img
-                    src = "https://lh3.googleusercontent.com/D3WsjGjW9zR-9pFBRGLFztCa_fFIFJZ7ySBwhnoSsapsYbtaaph0xUAUCLvB7d8HnGvfZMZMaJaSxPdvBkw8tVeNsVqLzAIhCFnXMCKwd2YAgwJUdGAOH6krlrjXyAHsHR3zG4v22U3abvF_YoARMLiAFxr4dsLyh1qxA2HnkcFynp7lVQlWcVPA_x0kqgKyUsLdn2yJm-al7Rrv4CdaxHgV2RN1WApx5k8OUqN91LN5Jp2ohR6izj9Iv1HTXPKbbT6JjzG8L5pJr_eGN7kX6J5xIEDMQWOqWG1o3otNLQayVni-ai1b8EimK_gfWMlFfnd6prUBZtOhzAnuEjSCLKspxmZrWx6SIvwNVW_7w34C3RT6bxLxi4cWvcw0TjVN2twQkjP__xzVOvKSfwmT-qK6VqjA5T4-dtXx48nMXLbTt3YSlrTU_SWAY1XqFfuV9_FcjBuFtKZWWjAV3pg3mjSrmCl6ezVBk4lqXjkX95wCU2W1FPgAmkUKKtSPpSaacayuMeQwWYf1xeaZBf4rGqTENrZatr22BdBTF-Bwx-EpyJ1tdPAo_Zd7VRwqovQ89IbVGN-7R5p6P_CIpYHlJeFCjQNT4AFipCs4ut3Relm7VM_zBwEgqOMiqJNN-ys6xsfuKHCxqOxTpxl02gmQEpZwqS9izfUn9lhMjzLjTCqiaslOVXoScS2GcfM81YgrKfPH9cWa08TyYLk-FRkM0kM1ZQ=w400-h396-no?authuser=0"
-                    alt = "Profile picture"
+                    src = {file ? URL.createObjectURL(file) :PF + user.profilePic}
+                    alt = ""
                     />
                     <label htmlFor="fileInput">
                         <i className=" settingsPPIcon far fa-user-circle"></i>
                     </label>
-                    <input type="file" id="fileInput" style={{display:"none"}}></input>
+                    <input 
+                        type="file"
+                        id="fileInput" 
+                        style={{display:"none"}} 
+                        onChange = {e => setFile(e.target.files[0])}
+                    />
                     </div>
                     <label>Username</label>
-                    <input type="text" placeholder="swikriti" />
+                    <input type="text" placeholder={user.username} onChange = {(e) =>setUsername(e.target.value)} />
                     <label>Email</label>
-                    <input type="email" placeholder="swikriti808@gmail.com" />
+                    <input type="email" placeholder={user.email} onChange = {(e) =>setEmail(e.target.value)}/>
                     <label>Password</label>
-                    <input type="password"/>
-                    <button className="settingsSubmit">Update</button>
+                    <input type="password" onChange = {(e) =>setPassword(e.target.value)}/>
+                    <button className="settingsSubmit" type= "submit">Update</button>
+                    {success && (<span style={{color:"green" , textAlign:"center", marginTop:"20px"}}>Profile has been updated</span>)}
                 </form>
             </div>
             <SideBar/>
