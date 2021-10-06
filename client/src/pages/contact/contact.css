@@ -1,0 +1,39 @@
+.contact{
+    height: calc(100vh - 50px);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background: linear-gradient(rgba(200,200,200,0.5),rgba(200,200,200,0.5)), url("https://images.pexels.com/photos/461940/pexels-photo-461940.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260");
+    background-size: cover;
+}
+
+.contactForm{
+    margin-top: 20px;
+    display: flex;
+    flex-direction: column;
+}
+
+.contactForm > label{
+    margin: 10px 0;
+}
+
+.contactInput{
+    padding: 10px;
+    background-color: white;
+    border: none;
+}
+
+.contactButton{
+    margin-top: 20px;
+    cursor: pointer;
+    background-color: teal;
+    border: none;
+    color: white;
+    border-radius: 10px;
+    padding: 10px
+}
+
+.contactText{
+    height: 100px;
+}
