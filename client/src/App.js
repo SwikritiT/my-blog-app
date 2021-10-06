@@ -15,6 +15,7 @@ import {
 } from "react-router-dom";
 import { useContext } from 'react';
 import { Context } from './context/Context';
+import Contact from './pages/contact/contact';
 
 
 function App() {
@@ -43,6 +44,9 @@ function App() {
       </Route>
       <Route path="/about">
         <About/>
+      </Route>  
+      <Route path="/contact">
+        <Contact/>
       </Route>
     </Switch>
     </Router>
