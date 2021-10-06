@@ -5,6 +5,8 @@ import Settings from './pages/settings/Settings';
 import Login from './pages/login/Login';
 import Register from './pages/register/Register';
 import TopBar from './components/topbar/TopBar';
+import About from './pages/about/About';
+
 import {
   BrowserRouter as Router,
   Switch,
@@ -13,6 +15,7 @@ import {
 } from "react-router-dom";
 import { useContext } from 'react';
 import { Context } from './context/Context';
+
 
 function App() {
   const {user} = useContext(Context)
@@ -37,6 +40,9 @@ function App() {
       </Route>
       <Route path="/post/:postId">
         <Single/>
+      </Route>
+      <Route path="/about">
+        <About/>
       </Route>
     </Switch>
     </Router>
